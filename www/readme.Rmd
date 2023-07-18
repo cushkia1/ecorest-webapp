@@ -1,0 +1,31 @@
+---
+title: "README"
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      collapse = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      error = FALSE)
+```
+
+
+# Ecorest Webapp <img src="deer.jpeg" align="right" width=140/>
+
+The **ecorest web app** is a graphical user-interface that can be used to conduct Habitat Suitability Index (HSI) modeling and Cost-Effective Incremental Cost Analysis (CEICA) using models and functions stored in the [ecorest](https://cran.r-project.org/web/packages/ecorest/index.html) R package (McKay & Hernandez-Abrams, 2020). Users may add their own model(s) by uploading .csv files or by selecting from the USFWS "blue book" models stored in [ecorest](https://cran.r-project.org/web/packages/ecorest/index.html). HSI and CEICA functions can be used independently of each other. The resulting graphical visualizations and table outputs from the HSI and CEICA analyses can be downloaded from the webapp. 
+
+<br /><br />
+More information on the ecorest R package can be found on the [CRAN webpage](https://cran.r-project.org/web/packages/ecorest/index.html) or the *Website* subtab on this app. Information pertaining to the WRISES team and their ongoing work can be found on the [WRISES GitHub](https://github.com/USACE-WRISES).
+
+<br /><br /><br /><br />
+Contributors: Colton Shaw (Colton.K.Shaw@erdc.dren.mil), Darixa Hernandez-Abrams (darixa.d.hernandez-abrams@usace.army.mil), Kyle McKay (Kyle.McKay@usace.army.mil)
+
+Release Date: // 
+Version: 1.0.1  
+Version Date: 5/17/2022  
+Licensing:
+

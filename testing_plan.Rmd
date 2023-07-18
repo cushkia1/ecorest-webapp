@@ -1,0 +1,249 @@
+---
+title: "testing_plan"
+output: html_notebook
+---
+
+Install Packages
+```{r}
+library(rlang) #download/install Rtools4 package according to your R version IF there are issues with rlang https://mirror.las.iastate.edu/CRAN/
+library(testthat)
+library(ecorest)
+```
+
+
+
+EcoRest Testing Plan
+
+*HSIarimean*
+```{r}
+#pass case
+testthat::expect_equal(HSIarimean(c(0.5,0.5,0.5,0.5)),0.5) 
+
+#pass case
+testthat::expect_equal(HSIarimean(c(0.5,0.5,0.5)),0.5)  
+
+#pass case
+testthat::expect_equal(HSIarimean(c(-50,50)),0)
+
+#error case
+testthat::expect_error(HSIarimean(c()))
+
+```
+
+*HSIgeomean*
+```{r}
+#pass case
+testthat::expect_equal(HSIgeomean(c(0.5,0.5,0.5,0.5)),0.5) 
+
+#pass case
+testthat::expect_equal(HSIgeomean(c(0.5,0.5,0.5)),0.5)  
+
+#error case
+testthat::expect_error(HSIgeomean(c(-50,50)))
+
+#pass case
+testthat::expect_equal(HSIgeomean(c()),1) #does this make sense?
+
+#pass case
+testthat::expect_equal(HSIgeomean(c(0,0)),0)
+
+```
+
+*HSIwarimean*
+```{r}
+#pass case
+testthat::expect_equal(HSIwarimean(c(0.5,0.5,0.5,0.5),c(0.25,0.25,0.25,0.25)),0.5) 
+
+#error case
+testthat::expect_error(HSIwarimean(c(0.5,0.5,0.5,0.5))) 
+
+#pass case
+testthat::expect_equal(HSIwarimean(c(0.5,0.5,0.5,1),c(NA,NA,NA,1)),1) 
+
+#error case
+testthat::expect_equal(HSIwarimean(c(-1),c(1)),"Habitat suitability index not within 0 to 1 range.")
+
+#error case
+testthat::expect_equal(HSIwarimean(c(2),c(1)),"Habitat suitability index not within 0 to 1 range.")
+
+#error case
+testthat::expect_equal(HSIwarimean(c(1),c(-1)),"Weights do not equal 1.")
+
+```
+
+*HSImin*
+```{r}
+#pass case
+testthat::expect_equal(HSImin(c(0.5,0.5,0.5,0.5)),0.5) 
+
+#pass case
+testthat::expect_equal(HSImin(c(1,0.5,0)),0)  
+
+#error case
+testthat::expect_equal(HSImin(c(-1)),"Habitat suitability index not within 0 to 1 range.")
+
+#error case
+testthat::expect_equal(HSImin(c(2)),"Habitat suitability index not within 0 to 1 range.")
+
+```
+
+*HSIeqtn*
+```{r}
+#pass case
+testthat::expect_equal(HSIeqtn("barredowl",c(1,1,1), HSImetadata),1) 
+
+#error case
+testthat::expect_equal(HSIeqtn("barredowl", c(0,NA,1), HSImetadata),"NA with possible SIV input error.")
+
+#error case
+testthat::expect_error(HSIeqtn("nonexistent_model", c(0,NA,1), HSImetadata))
+
+#error case
+testthat::expect_equal(HSIeqtn("barredowl", c(1,1,1,1), HSImetadata),"SIV vector length does not match equation.")
+
+#error case
+testthat::expect_error(HSIeqtn("barredowl", c(), HSImetadata))
+
+#error case
+testthat::expect_error(HSIeqtn("barredowl", c(0,NA,1)))
+
+```
+
+*SIcalc*
+```{r}
+var1 <- cbind(c(0,2,4,NA), c(0.1,1,1,NA)) #Number of trees > 51cm diameter per 0.4 ha plot
+var2 <- cbind(c(0,5,20,NA), c(0,0,1,NA)) #Mean diameter of overstory trees
+var3 <- cbind(c(0,20,60,100), c(0,0,1,1)) #Percent canopy cover of overstory trees
+barredowl <- cbind(var1, var2, var3)
+colnames(barredowl)<- c("tree.num", "tree.num.SIV",
+  "avg.dbh.in", "avg.dbh.SIV", "can.cov", "can.cov.SIV")
+
+#pass case
+input.demo1 <- c(2, 5, 20)
+testthat::expect_equal(SIcalc(barredowl, input.demo1),c(1,0,0))
+
+#pass case
+input.demo2 <- c(NA, 5, 20)
+testthat::expect_equal(SIcalc(barredowl, input.demo2),c(NA,0,0))
+
+#pass case
+input.demo3 <- c(NA, NA, NA)
+testthat::expect_equal(SIcalc(barredowl, input.demo3),c(NA,NA,NA))
+
+#error case
+input.demo4 <- c(1)
+testthat::expect_equal(SIcalc(barredowl, input.demo4),"Number of inputs does not equal number of SI values.")
+
+#error case
+input.demo5 <- c(1,1,1,1)
+testthat::expect_equal(SIcalc(barredowl, input.demo5),"Number of inputs does not equal number of SI values.")
+
+#pass case
+input.demo6 <- c(-1,-1,-1)
+testthat::expect_equal(SIcalc(barredowl, input.demo6),c(0.1,0,0))
+
+#error case
+input.demo7 <- c()
+testthat::expect_equal(SIcalc(barredowl, input.demo7),"Number of inputs does not equal number of SI values.")
+
+#error case
+input.demo8 <- c(2, 5, 20)
+testthat::expect_error(SIcalc(nonexistent_model, input.demo8))
+
+#error case
+input.demo9 <- c(c(1,1,1),1,1)
+testthat::expect_error(SIcalc(nonexistent_model, input.demo9))
+
+```
+
+*HUCalc*
+```{r}
+
+input.demo1 <- c(0.1,1)
+result1 <- as.data.frame(matrix(NA, nrow = 1, ncol = 3))
+colnames(result1) = c("Quality", "Quantity", "IndexUnits")
+result1[1,1] = 0.55
+result1[1,2] = 100
+result1[1,3] = 55
+
+#pass case
+testthat::expect_equal(HUcalc(input.demo1,100,HSIarimean)[1,1],result1[1,1])
+testthat::expect_equal(HUcalc(input.demo1,100,HSIarimean)[1,2],result1[1,2])
+testthat::expect_equal(HUcalc(input.demo1,100,HSIarimean)[1,3],result1[1,3])
+
+#pass case
+testthat::expect_equal(HUcalc(input.demo1,0,HSIarimean)[1,1],0.55)
+testthat::expect_equal(HUcalc(input.demo1,0,HSIarimean)[1,2],0)
+testthat::expect_equal(HUcalc(input.demo1,0,HSIarimean)[1,3],0)
+
+#pass case
+testthat::expect_equal(HUcalc(input.demo1,-100,HSIarimean)[1,1],0.55)
+testthat::expect_equal(HUcalc(input.demo1,-100,HSIarimean)[1,2],-100)
+testthat::expect_equal(HUcalc(input.demo1,-100,HSIarimean)[1,3],-55)
+
+#pass case
+input.demo2 <- c(0)
+testthat::expect_equal(HUcalc(input.demo2,100,HSIarimean)[1,1],0)
+testthat::expect_equal(HUcalc(input.demo2,100,HSIarimean)[1,2],100)
+testthat::expect_equal(HUcalc(input.demo2,100,HSIarimean)[1,3],0)
+
+#error case
+input.demo3 <- c()
+testthat::expect_error(HUcalc(input.demo3,100,HSIarimean)[1,1])
+testthat::expect_error(HUcalc(input.demo3,100,HSIarimean)[1,2])
+testthat::expect_error(HUcalc(input.demo3,100,HSIarimean)[1,3])
+```
+
+*CEfinder*
+```{r}
+
+#pass case
+benefit <- c(0,10,5,20,20)
+cost <- c(0,100,100,200,150)
+testthat::expect_equal(CEfinder(benefit,cost),c(1,1,0,0,1))
+
+#pass case
+benefit <- c(-10,10,5,20,20)
+cost <- c(0,100,100,200,150)
+testthat::expect_equal(CEfinder(benefit,cost),c(1,1,0,0,1))
+
+#pass case
+benefit <- c(0,10,5,20,20)
+cost <- c(-10,100,100,200,150)
+testthat::expect_equal(CEfinder(benefit,cost),c(1,1,0,0,1))
+
+#pass case
+benefit <- c(0,0,0,0,0)
+cost <- c(0,100,100,200,150)
+testthat::expect_equal(CEfinder(benefit,cost),c(1,0,0,0,0))
+
+#pass case
+benefit <- c()
+cost <- c(0,100,100,200,150)
+testthat::expect_equal(CEfinder(benefit,cost),c(0))
+
+#pass case
+benefit <- c()
+cost <- c()
+testthat::expect_equal(CEfinder(benefit,cost),c(0))
+```
+
+*BBfinder*
+Testing done on separate application. Successfully passes. 
+
+*CEICAplotter*
+
+```{r}
+altnames <- c("No Action","Plan 1","Plan 2","Plan 3","Plan 4")
+benefit <- c(0,41.63,49.5,83.75,84)
+cost <- c(0,19.7,29.7,260.2,313.8)
+CE <- CEfinder(benefit,cost)
+BB <- BBfinder(benefit,cost,CE)[[1]][,4]
+outfile_CEICA <- tempfile(fileext='.jpeg') #create temporary file to copy to
+CEICAplotter(altnames,benefit,cost,CE,BB,outfile_CEICA)
+#knitr::include_graphics("ZZ_Fig02.01_NYBEM.Extent.jpeg")
+```
+#CEICA.demo1.png
+*HSIplotter*
+
+Cannot test in this capacity. Compared plot results with verified vectors successfully. 
