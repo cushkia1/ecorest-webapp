@@ -22,7 +22,7 @@ The **ecorest web app** is a graphical user-interface that can be used to conduc
 More information on the ecorest R package can be found on the [CRAN webpage](https://cran.r-project.org/web/packages/ecorest/index.html) or the *Website* subtab on this app. Information pertaining to the WRISES team and their ongoing work can be found on the [WRISES GitHub](https://github.com/USACE-WRISES).
 
 <br /><br /><br /><br />
-Contributors: Colton Shaw (Colton.K.Shaw@erdc.dren.mil), Darixa Hernandez-Abrams (darixa.d.hernandez-abrams@usace.army.mil), Kyle McKay (Kyle.McKay@usace.army.mil)
+Contributors: Colton Shaw (cshaw@interfluve.com), Darixa Hernandez-Abrams (darixa.d.hernandez-abrams@usace.army.mil), Kyle McKay (Kyle.McKay@usace.army.mil)
 
 Release Date: // 
 Version: 1.0.1  
