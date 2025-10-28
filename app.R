@@ -230,7 +230,7 @@ ui <-dashboardPage(   #open user-interface
                     #Steps for HUcalc
                     helpText("HSIcalc computes habitat units given a set of suitability indices, a habitat suitability index equation,
                               and habitat quantity."),
-                    helpText("Enter habitat size associated with suitability indices (i.e., length, area, or volume). Output for habitat quantity will show up as 'HU'(Habitat Unit) on bottom table."),
+                    helpText("Enter habitat size associated with suitability indices (i.e., length, area, or volume). Output for habitat quantity will show up as 'HU'(Habitat Unit) in the output table."),
                     #Text box for user to write the project area 
                     br(),br(),
                     numericInput(inputId= "area_one", #the user inputs area in this textbox which can be found in input$area_one
